@@ -182,11 +182,11 @@
                         var osm_mapnik = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	                    maxZoom: 19,
 	                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        }).addTo(map);
+                        });
             
                         var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                         attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-                        });
+                        }).addTo(map);
             
                         var carto = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}{r}.png', {attribution:'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>&copy; <a href="http://cartodb.com/attributions">CartoDB</a>', 
                         subdomains: 'abcd', 
@@ -195,13 +195,13 @@
             
             
                         var baseMaps = {
+                            "Satellite": esri,
                             "OSM" : osm_mapnik,
                             "Dark": carto,
-                            "Satellite": esri,
                         };     
                         
                         //Batas Kecamatan//
-                        /*1. Setting the Kecamatan Area Style */
+                        /*1. Setting Kecamatan area style */
                         function getColor(a) {
                             return a == 'Anggana' ? '#e69a29' :
                                     a == 'Kembang Janggut' ? '#d58ad6' :
@@ -235,7 +235,7 @@
                             };
                         }
 
-                        /*2. Define style function to the Kecamatan Area*/
+                        /*2. Define style function to the Kecamatan area*/
                         var bataskec_kukar = L.geoJSON(bataskec, {style,
                             onEachFeature: function (feature, layer) {layer
                                 .bindPopup('Kecamatan ' +  feature.properties.admin );
@@ -294,7 +294,7 @@
                             sentraikm_area_kukar.resetStyle(e.target);
                         }
 
-                        /*2. Add KI Area & Sentra IKM Area GeoJSON Data*/
+                        /*2. Add KI Area & Sentra IKM area GeoJSON data*/
                         const kpi_area_kukar= 
                         L.geoJSON(kpi_area,{
                             style: function(feature) {
@@ -309,7 +309,7 @@
                                 });
                                 if (feature.properties) {
                                     layer
-                                .bindPopup('<h1 class="judulki">Lokasi Potensial untuk Kawasan Industri</h1>' + '<p style="text-align:center;"> Luas: ' + '<strong>' + feature.properties.LUAS_ha + '</strong>' + ' ha. <br>Lokasi: ' + '<strong>' + feature.properties.admin + '</strong>' + '</p>');
+                                .bindPopup('<h1 class="judulki">Lokasi Potensial untuk Kawasan Industri</h1>' + '<p style="text-align:center;"> Luas: ' + '<strong>' + feature.properties.LUAS_ha + '</strong>' + ' ha. <br>Lokasi: ' + '<strong>' + 'Kecamatan '  + feature.properties.admin + '</strong>' + '</p>');
                                 }
                             }
                             });
@@ -337,7 +337,7 @@
                                 });
                                 if (feature.properties) {
                                     layer
-                                .bindPopup('<h1 class="judulikm">Lokasi Potensial untuk Sentra IKM</h1>' + '<p style="text-align:center;"> Luas: ' + '<strong>' + feature.properties.LUAS_ha + '</strong>' + ' ha. <br>Lokasi: ' + '<strong>' + feature.properties.admin + '</strong>' + '</p>');
+                                .bindPopup('<h1 class="judulikm">Lokasi Potensial untuk Sentra IKM</h1>' + '<p style="text-align:center;"> Luas: ' + '<strong>' + feature.properties.LUAS_ha + '</strong>' + ' ha. <br>Lokasi: ' + '<strong>' + 'Kecamatan ' + feature.properties.admin + '</strong>' + '</p>');
                                 }
                             }
                             });
@@ -372,10 +372,9 @@
                             iconSize: [18.83, 21.65]
                         })
                         return L.marker(LatLng, {icon: myIcon})
-                        .bindPopup('<h1 class="judulproduk">Produk Unggulan</h1>' + '<p style="text-align:center;">' + '<strong>' + feature.properties.admin + '</strong>' + '<br>' + '<img src="' + feature.properties.foto + '" height="200px"/>' + '</p>' );
                         }
 
-                        /*2. Create an option object that specifies which function will called on each point */
+                        /*2. Create an icon option object that specifies which function will called on each point */
                         const myIconOptions1 = {
                             pointToLayer: createCustomIcon1
                         }
@@ -384,11 +383,11 @@
                             pointToLayer: createCustomIcon2
                         }
 
-                        /*3. Add GeoJSON Data with Custom Icon function */
+                        /*3. Add GeoJSON data with custom icon function */
                         var kpi_point_kukar = L.geoJson(kpi_point, myIconOptions1);
                         var sentraikm_point_kukar = L.geoJson(sentraikm_point, myIconOptions2);
 
-                        /*4. Create the Kawasan Industri & Sentra IKM Point with the function and Labels */ 
+                        /*4. Create the Kawasan Industri & Sentra IKM Point with the function and labels */ 
                         var kpi_point_kukar_label = L.geoJson(kpi_point, {
                             pointToLayer: function (feature, latlng) {
                                 return L.marker(latlng, {
@@ -399,7 +398,7 @@
                                 })
                             },
                             onEachFeature: function (feature, layer) {
-                                var content = "Kawasan Industri <br> " + layer.feature.properties.admin.toString() + '<br> <br> <br> <br> <br> <br> <br>';
+                                var content = "Kawasan Industri <br> " + 'Kec. ' + layer.feature.properties.admin.toString() + '<br> <br> <br> <br> <br> <br> <br>';
                                 layer.bindTooltip(content, {
                                 direction: 'center',
                                 permanent: true,
@@ -427,7 +426,7 @@
                                 })
                             },
                             onEachFeature: function (feature, layer) {
-                                var content = "Sentra IKM <br> " + layer.feature.properties.admin.toString() + '<br> <br> <br> <br> <br> <br> <br>';
+                                var content = "Sentra IKM <br> " + 'Kec. ' + layer.feature.properties.admin.toString() + '<br> <br> <br> <br> <br> <br> <br>';
                                 layer.bindTooltip(content, {
                                 direction: 'center',
                                 permanent: true,
@@ -454,7 +453,7 @@
                             }});
 
                        
-                        //Add Layer Control//
+                        /*Add Layer Control*/
                         var ki = L.layerGroup([kpi_area_kukar, kpi_point_kukar, kpi_point_kukar_label]);
                         var ikm = L.layerGroup([sentraikm_area_kukar, sentraikm_point_kukar, sentraikm_point_kukar_label]);
                         
